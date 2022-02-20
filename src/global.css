@@ -32,7 +32,7 @@ body {
 	box-shadow: 1px 15px 5px #00000069;
 }
 
-.marker.base::after {
+.marker.base::before {
 	content: '';
 	position: absolute;
 	width: 0;
@@ -41,6 +41,16 @@ body {
 	top: 16px;
 	border: 12px solid transparent;
 	border-top: 16px solid #0d6efd;
+}
+
+.marker.hole {
+	position: absolute;
+	border-radius: 5px;
+	width: 10px;
+	height: 10px;
+	background: white;
+	display: block;
+	margin: 7px;
 }
 
 .marker.text {

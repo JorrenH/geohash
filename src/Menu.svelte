@@ -1,6 +1,6 @@
 <script lang="ts">
     import { latitude, longitude, precision, zoom, geohash } from "./stores";
-    import { Tooltip } from "bootstrap";
+    import {Collapse, Tooltip} from "bootstrap";
     import Geohash from "./geohash";
 
     let corner = "center";
@@ -49,6 +49,18 @@
         }, 1500);
         if (tooltip) tooltip.show();
     }
+
+    let collapse, collapsed = window.innerWidth < 600;
+    function initCollapse(element) {
+        collapse = new Collapse(element, { toggle: !collapsed });
+    }
+
+    console.log(window.innerWidth);
+    $: collapseIcon = collapsed ? "chevron_right" : "expand_more";
+    function toggleCollapse() {
+        collapsed = !collapsed;
+        if (collapse) collapse.toggle();
+    }
 </script>
 
 <menu class="menu card position-absolute shadow m-2">
@@ -72,30 +84,32 @@
             <span class="input-group-text">geohash</span>
             <input bind:value={$geohash} on:change={setGeohash} type="text" class="form-control" placeholder="Geohash" aria-label="geohash">
         </div>
+        <button on:click={toggleCollapse} class="btn position-absolute end-0 me-3 icon material-icons">{collapseIcon}</button>
         <h5 class="card-title">Output</h5>
-        <div class="bounds position-relative m-5">
-            <input id="corner-nw" type="radio" class="btn-check" name="corner" value="northwest" bind:group={corner}>
-            <label class="btn btn-outline-primary position-absolute top-0 start-0 translate-middle" for="corner-nw">northwest</label>
+        <div class="collapse" use:initCollapse>
+            <div class="bounds position-relative m-5">
+                <input id="corner-nw" type="radio" class="btn-check" name="corner" value="northwest" bind:group={corner}>
+                <label class="btn btn-outline-primary position-absolute top-0 start-0 translate-middle" for="corner-nw">northwest</label>
 
-            <input id="corner-ne" type="radio" class="btn-check" name="corner" value="northeast" bind:group={corner}>
-            <label class="btn btn-outline-primary position-absolute top-0 start-100 translate-middle" for="corner-ne">northeast</label>
+                <input id="corner-ne" type="radio" class="btn-check" name="corner" value="northeast" bind:group={corner}>
+                <label class="btn btn-outline-primary position-absolute top-0 start-100 translate-middle" for="corner-ne">northeast</label>
 
-            <input  id="corner-ct" type="radio" class="btn-check" name="corner" value="center" bind:group={corner}>
-            <label class="btn btn-outline-primary position-absolute top-50 start-50 translate-middle" for="corner-ct">center</label>
+                <input  id="corner-ct" type="radio" class="btn-check" name="corner" value="center" bind:group={corner}>
+                <label class="btn btn-outline-primary position-absolute top-50 start-50 translate-middle" for="corner-ct">center</label>
 
-            <input id="corner-sw" type="radio" class="btn-check" name="corner" value="southwest" bind:group={corner}>
-            <label class="btn btn-outline-primary position-absolute top-100 start-0 translate-middle" for="corner-sw">southwest</label>
+                <input id="corner-sw" type="radio" class="btn-check" name="corner" value="southwest" bind:group={corner}>
+                <label class="btn btn-outline-primary position-absolute top-100 start-0 translate-middle" for="corner-sw">southwest</label>
 
-            <input id="corner-se" type="radio" class="btn-check"  name="corner" value="southeast" bind:group={corner}>
-            <label class="btn btn-outline-primary position-absolute top-100 start-100 translate-middle" for="corner-se">southeast</label>
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">lat</span>
-            <input bind:value={output[0]} type="number" class="form-control output" step="0.00001" placeholder="Latitude" aria-label="latitude" readonly>
-            <span class="input-group-text">lon</span>
-            <input bind:value={output[1]} type="number" class="form-control output" step="0.00001" placeholder="Longitude" aria-label="longitude" readonly>
-            <button on:click={copyToClipboard} use:initTooltip class="copy input-group-text material-icons" data-bs-toggle="tooltip" data-bs-placement="top" title="Copied to clipboard!">assignment</button>
-
+                <input id="corner-se" type="radio" class="btn-check"  name="corner" value="southeast" bind:group={corner}>
+                <label class="btn btn-outline-primary position-absolute top-100 start-100 translate-middle" for="corner-se">southeast</label>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">lat</span>
+                <input bind:value={output[0]} type="number" class="form-control output" step="0.00001" placeholder="Latitude" aria-label="latitude" readonly>
+                <span class="input-group-text">lon</span>
+                <input bind:value={output[1]} type="number" class="form-control output" step="0.00001" placeholder="Longitude" aria-label="longitude" readonly>
+                <button on:click={copyToClipboard} use:initTooltip class="copy input-group-text material-icons" data-bs-toggle="tooltip" data-bs-placement="top" title="Copied to clipboard!">assignment</button>
+            </div>
         </div>
         <p class="text-sm-center mb-0"> © {new Date().getFullYear()} — Jorren Hendriks </p>
     </div>

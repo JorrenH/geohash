@@ -47,7 +47,7 @@
 			attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
 		}).addTo(map);
 
-        marker = L.marker([0, 0], { icon: markerIcon("⏺") }).addTo(map);
+        marker = L.marker([0, 0], { icon: markerIcon() }).addTo(map);
         bounds = L.rectangle([[0,0], [0,0]], { color: "#0d6efd", fillOpacity: 0.1 }).addTo(map);
         label = L.marker([0, 0], { icon: labelIcon("null") }).addTo(map);
 
@@ -67,10 +67,10 @@
         return L.divIcon({ className: `marker`, html: `<div class="marker label"> ${label} </div>`});
     }
 
-    function markerIcon(label: String) {
+    function markerIcon() {
         return L.divIcon({ className: `marker`, html: `
             <div class="marker base blue">
-              <span class="marker text">${label}</span>
+              <span class="marker hole"></span>
             </div>
         `});
     }
