@@ -1,147 +1,20 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GeoHash Tool</title>
+<html lang="en">
+<head>
+	<meta charset='utf-8'>
+	<meta name='viewport' content='width=device-width,initial-scale=1'>
 
-    <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
-    <link rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.35.1/mapbox-gl.css"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" >
-    <!-- Compiled and minified JavaScript -->
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.35.1/mapbox-gl.js"></script>
-    <script type="module" src="js/app.js"></script>
+	<title>Geohash Converter - Find and visualize your Geohash</title>
+	<meta name="description" content="A page with all the tooling you need to convert between (latitude, longitude)
+	    notation and the bounding boxes corresponding to any Geohash value. Presents both numeric outputs as well
+        as a visual on the world map with an intuitive interface"/>
 
-    <style>
-      .background {
-        position: absolute;
-        width: 100vw;
-        height: 100vh;
-      }
+	<link rel='icon' type='image/png' href='favicon.ico'>
+	<link rel='stylesheet' href='build/bundle.css'>
 
-      .menu-wrapper {
-        position: absolute;
-        z-index: 100000;
-        top: 0;
-        left: 0;
-      }
+	<script defer src='build/bundle.js'></script>
+</head>
 
-      .menu {
-        margin: 5px;
-        width: 20vw;
-        min-width: 300px;
-      }
-
-      .marker {
-        width: 0;
-        height: 0;
-      }
-
-      .marker.base {
-        background: #0064ff;
-        border-radius: 15px 15px 14px 14px;
-        position: absolute;
-        width: 24px;
-        height: 24px;
-        bottom: 13px;
-        left: -6px;
-        color: white;
-        text-align: center;
-        line-height: 25px;
-        font-weight: bold;
-        box-shadow: 1px 15px 5px #00000069;
-      }
-
-      .marker.base::after {
-        content: '';
-        position: absolute;
-        width: 0;
-        height: 0;
-        left: 0;
-        top: 16px;
-        border: 12px solid transparent;
-        border-top: 16px solid #0064ff;
-      }
-
-      .marker.text {
-        z-index: 1;
-        position: absolute;
-        left: 0;
-        width: 100%;
-      }
-
-      .marker.label {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 24px;
-        font-weight: bold;
-        opacity: 0.5;
-      }
-
-      .bounds * {
-        background: white;
-      }
-
-      .bounds {
-        height: 140px;
-        border: 1px solid rgba(0, 0, 0, 0.2);
-      }
-    </style>
-  </head>
-  <body>
-    <div id="map" class="background"></div>
-    <div class="menu-wrapper">
-      <div class="menu card shadow">
-          <div class="card-body">
-            <h5 class="card-title">Input</h5>
-            <div class="input-group mb-3">
-              <span class="input-group-text">lat</span>
-              <input id="input-lat" type="text" class="form-control" placeholder="Latitude" aria-label="latitude">
-              <span class="input-group-text">lon</span>
-              <input id="input-lon" type="text" class="form-control" placeholder="Longitude" aria-label="longitude">
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text">precision</span>
-              <input id="input-prc" type="number" class="form-control" placeholder="Precision" min="1" max="12" step="1" aria-label="precision">
-              <div class="input-group-text">
-                <input id="input-zmn" class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input">
-                <label class="ps-2" for="input-zmn"> zoom </label>
-              </div>
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text">geohash</span>
-              <input id="input-ghs" type="text" class="form-control" placeholder="Geohash" aria-label="geohash">
-            </div>
-            <h5 class="card-title">Output</h5>
-            <div class="bounds position-relative m-5">
-                <input id="corner-nw" type="radio" class="btn-check" name="input-crn" autocomplete="off">
-                <label class="btn btn-outline-primary position-absolute top-0 start-0 translate-middle" for="corner-nw">northwest</label>
-
-                <input id="corner-ne" type="radio" class="btn-check" name="input-crn" autocomplete="off">
-                <label class="btn btn-outline-primary position-absolute top-0 start-100 translate-middle" for="corner-ne">northeast</label>
-
-                <input id="corner-ct" type="radio" class="btn-check" name="input-crn" autocomplete="off" checked>
-                <label class="btn btn-outline-primary position-absolute top-50 start-50 translate-middle" for="corner-ct">center</label>
-
-                <input id="corner-sw" type="radio" class="btn-check" name="input-crn" autocomplete="off">
-                <label class="btn btn-outline-primary position-absolute top-100 start-0 translate-middle" for="corner-sw">southwest</label>
-
-                <input id="corner-se" type="radio" class="btn-check" name="input-crn" autocomplete="off">
-                <label class="btn btn-outline-primary position-absolute top-100 start-100 translate-middle" for="corner-se">southeast</label>
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text">lat</span>
-              <input type="text" class="form-control" placeholder="Latitude" aria-label="latitude">
-              <span class="input-group-text">lon</span>
-              <input type="text" class="form-control" placeholder="Longitude" aria-label="longitude">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </body>
+<body>
+</body>
 </html>

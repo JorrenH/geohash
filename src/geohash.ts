@@ -9,6 +9,8 @@ const base32 = '0123456789bcdefghjkmnpqrstuvwxyz'; // (geohash-specific) Base32 
  */
 class Geohash {
 
+    static PATTERN = new RegExp("^[" + base32 + "]{1,}$");
+
     /**
      * Encodes latitude/longitude to geohash, either to specified precision or to automatically
      * evaluated precision.
@@ -108,10 +110,10 @@ class Geohash {
         let lon = (lonMin + lonMax)/2;
 
         // round to close to centre without excessive precision: ⌊2-log10(Δ°)⌋ decimal places
-        lat = lat.toFixed(Math.floor(2-Math.log(latMax-latMin)/Math.LN10));
-        lon = lon.toFixed(Math.floor(2-Math.log(lonMax-lonMin)/Math.LN10));
+        lat = Number(lat.toFixed(Math.floor(2-Math.log(latMax-latMin)/Math.LN10)));
+        lon = Number(lon.toFixed(Math.floor(2-Math.log(lonMax-lonMin)/Math.LN10)));
 
-        return { lat: Number(lat), lon: Number(lon) };
+        return { lat, lon };
     }
 
 
@@ -159,12 +161,10 @@ class Geohash {
             }
         }
 
-        const bounds = {
-            sw: { lat: latMin, lon: lonMin },
-            ne: { lat: latMax, lon: lonMax },
+        return {
+            sw: {lat: latMin, lon: lonMin},
+            ne: {lat: latMax, lon: lonMax},
         };
-
-        return bounds;
     }
 
 
@@ -231,6 +231,11 @@ class Geohash {
             'w':  Geohash.adjacent(geohash, 'w'),
             'nw': Geohash.adjacent(Geohash.adjacent(geohash, 'n'), 'w'),
         };
+    }
+
+    static valid(geohash: string) {
+        if (!geohash) return false;
+        return Geohash.PATTERN.test(geohash);
     }
 
 }
