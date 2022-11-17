@@ -1,0 +1,47 @@
+button.copy {
+    color: #666;
+}
+
+button.copy:hover, button.copy:active {
+    background: #d5d7da;
+}
+
+input[readonly] {
+    background: white;
+}
+
+.menu {
+    z-index: 1000;
+    padding: 0;
+    width: 20vw;
+    min-width: 300px;
+}
+
+.bounds {
+    height: 140px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.bounds * {
+    background: white;
+}
+
+.bounds *:hover, .bounds *:active, .bounds *:focus {
+    background: var(--bs-primary);
+}
+
+input.output {
+    background: white !important;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input.output::-webkit-outer-spin-button,
+input.output::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input.output[type=number] {
+    -moz-appearance: textfield;
+}
