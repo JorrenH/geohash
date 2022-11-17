@@ -1,0 +1,94 @@
+.leaflet-div-icon {
+    background: none;
+    border: none;
+}
+
+.leaflet-tooltip {
+    background-color: none;
+    border: none;
+    padding: 0;
+}
+
+.leaflet-tooltip::after, .leaflet-tooltip::before {
+    content: none;
+}
+
+.background-map {
+	width: 100%;
+	height: 100%;
+	display: block;
+	position: fixed;
+	top: 0;
+	left: 0;
+}
+
+.marker {
+	width: 0;
+	height: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.marker.base {
+	background: #0d6efd;
+	border-radius: 15px 15px 14px 14px;
+	position: absolute;
+	width: 24px;
+	height: 24px;
+	bottom: 13px;
+	left: -6px;
+	color: white;
+	text-align: center;
+	line-height: 25px;
+	font-weight: bold;
+	box-shadow: 1px 15px 5px #00000069;
+}
+
+.marker.base::before {
+	content: '';
+	position: absolute;
+	width: 0;
+	height: 0;
+	left: 0;
+	top: 16px;
+	border: 12px solid transparent;
+	border-top: 16px solid #0d6efd;
+}
+
+.marker.hole {
+	position: absolute;
+	border-radius: 5px;
+	width: 10px;
+	height: 10px;
+	background: white;
+	display: block;
+	margin: 7px;
+}
+
+.marker.text {
+	z-index: 1;
+	position: absolute;
+	left: 0;
+	width: 100%;
+}
+
+.marker.label {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 24px;
+	font-weight: bold;
+}
+
+.map.rectangle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.map.text {
+    font-size: 2vw;
+    font-weight: bold;
+    text-transform: uppercase;
+}
