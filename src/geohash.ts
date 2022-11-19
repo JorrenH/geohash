@@ -16,7 +16,7 @@ class Geohash {
      * evaluated precision.
      *
      * @param   {number} lat - Latitude in degrees.
-     * @param   {number} lon - Longitude in degrees.
+     * @param   {number} lng - Longitude in degrees.
      * @param   {number} [precision] - Number of characters in resulting geohash.
      * @returns {string} Geohash of supplied latitude/longitude.
      * @throws  Invalid geohash.
@@ -24,23 +24,23 @@ class Geohash {
      * @example
      *     const geohash = Geohash.encode(52.205, 0.119, 7); // => 'u120fxw'
      */
-    static encode(lat, lon, precision) {
+    static encode(lat: number, lng: number, precision: number) : string {
         // infer precision?
         if (typeof precision == 'undefined') {
             // refine geohash until it matches precision of supplied lat/lon
             for (let p=1; p<=12; p++) {
-                const hash = Geohash.encode(lat, lon, p);
+                const hash = Geohash.encode(lat, lng, p);
                 const posn = Geohash.decode(hash);
-                if (posn.lat==lat && posn.lon==lon) return hash;
+                if (posn.lat == lat && posn.lng == lng) return hash;
             }
             precision = 12; // set to maximum
         }
 
         lat = Number(lat);
-        lon = Number(lon);
+        lng = Number(lng);
         precision = Number(precision);
 
-        if (isNaN(lat) || isNaN(lon) || isNaN(precision)) throw new Error('Invalid geohash');
+        if (isNaN(lat) || isNaN(lng) || isNaN(precision)) throw new Error('Invalid geohash');
 
         let idx = 0; // index into base32 map
         let bit = 0; // each char holds 5 bits
@@ -54,7 +54,7 @@ class Geohash {
             if (evenBit) {
                 // bisect E-W longitude
                 const lonMid = (lonMin + lonMax) / 2;
-                if (lon >= lonMid) {
+                if (lng >= lonMid) {
                     idx = idx*2 + 1;
                     lonMin = lonMid;
                 } else {
@@ -91,29 +91,29 @@ class Geohash {
      *     to reasonable precision).
      *
      * @param   {string} geohash - Geohash string to be converted to latitude/longitude.
-     * @returns {{lat:number, lon:number}} (Center of) geohashed location.
+     * @returns {{lat:number, lng:number}} (Center of) geohashed location.
      * @throws  Invalid geohash.
      *
      * @example
      *     const latlon = Geohash.decode('u120fxw'); // => { lat: 52.205, lon: 0.1188 }
      */
-    static decode(geohash) {
+    static decode(geohash: string) : { lat: number, lng: number } {
 
         const bounds = Geohash.bounds(geohash); // <-- the hard work
         // now just determine the centre of the cell...
 
-        const latMin = bounds.sw.lat, lonMin = bounds.sw.lon;
-        const latMax = bounds.ne.lat, lonMax = bounds.ne.lon;
+        const latMin = bounds.sw.lat, lonMin = bounds.sw.lng;
+        const latMax = bounds.ne.lat, lonMax = bounds.ne.lng;
 
         // cell centre
         let lat = (latMin + latMax)/2;
-        let lon = (lonMin + lonMax)/2;
+        let lng = (lonMin + lonMax)/2;
 
         // round to close to centre without excessive precision: ⌊2-log10(Δ°)⌋ decimal places
         lat = Number(lat.toFixed(Math.floor(2-Math.log(latMax-latMin)/Math.LN10)));
-        lon = Number(lon.toFixed(Math.floor(2-Math.log(lonMax-lonMin)/Math.LN10)));
+        lng = Number(lng.toFixed(Math.floor(2-Math.log(lonMax-lonMin)/Math.LN10)));
 
-        return { lat, lon };
+        return { lat, lng };
     }
 
 
@@ -121,10 +121,10 @@ class Geohash {
      * Returns SW/NE latitude/longitude bounds of specified geohash.
      *
      * @param   {string} geohash - Cell that bounds are required of.
-     * @returns {{sw: {lat: number, lon: number}, ne: {lat: number, lon: number}}}
+     * @returns {{sw: {lat: number, lng: number}, ne: {lat: number, lng: number}}}
      * @throws  Invalid geohash.
      */
-    static bounds(geohash) {
+    static bounds(geohash: string) : {sw: {lat: number, lng: number}, ne: {lat: number, lng: number}} {
         if (geohash.length == 0) throw new Error('Invalid geohash');
 
         geohash = geohash.toLowerCase();
@@ -162,8 +162,8 @@ class Geohash {
         }
 
         return {
-            sw: {lat: latMin, lon: lonMin},
-            ne: {lat: latMax, lon: lonMax},
+            sw: {lat: latMin, lng: lonMin},
+            ne: {lat: latMax, lng: lonMax},
         };
     }
 
@@ -176,11 +176,10 @@ class Geohash {
      * @returns {string} Geocode of adjacent cell.
      * @throws  Invalid geohash.
      */
-    static adjacent(geohash, direction) {
+    static adjacent(geohash: string, direction : 'n' | 's' | 'e' | 'w') {
         // based on github.com/davetroy/geohash-js
 
         geohash = geohash.toLowerCase();
-        direction = direction.toLowerCase();
 
         if (geohash.length == 0) throw new Error('Invalid geohash');
         if ('nsew'.indexOf(direction) == -1) throw new Error('Invalid direction');
@@ -220,7 +219,7 @@ class Geohash {
      * @returns {{n,ne,e,se,s,sw,w,nw: string}}
      * @throws  Invalid geohash.
      */
-    static neighbours(geohash) {
+    static neighbours(geohash: string) {
         return {
             'n':  Geohash.adjacent(geohash, 'n'),
             'ne': Geohash.adjacent(Geohash.adjacent(geohash, 'n'), 'e'),
@@ -234,7 +233,6 @@ class Geohash {
     }
 
     static valid(geohash: string) {
-        if (!geohash) return false;
         return Geohash.PATTERN.test(geohash);
     }
 

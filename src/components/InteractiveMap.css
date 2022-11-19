@@ -1,20 +1,33 @@
-html, body {
-	position: relative;
-	width: 100%;
-	height: 100%;
+.leaflet-div-icon {
+    background: none;
+    border: none;
 }
 
-body {
-	color: #333;
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+.leaflet-tooltip {
+    background-color: none;
+    border: none;
+    padding: 0;
+}
+
+.leaflet-tooltip::after, .leaflet-tooltip::before {
+    content: none;
+}
+
+.background-map {
+	width: 100%;
+	height: 100%;
+	display: block;
+	position: fixed;
+	top: 0;
+	left: 0;
 }
 
 .marker {
 	width: 0;
 	height: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .marker.base {
@@ -66,4 +79,16 @@ body {
 	align-items: center;
 	font-size: 24px;
 	font-weight: bold;
+}
+
+.map.rectangle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.map.text {
+    font-size: 2vw;
+    font-weight: bold;
+    text-transform: uppercase;
 }

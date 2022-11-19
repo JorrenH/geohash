@@ -48,6 +48,7 @@ build/Release
 # Dependency directories
 node_modules/
 package-lock.json
+pnpm-lock.yaml
 
 # Optional npm cache directory
 .npm
@@ -67,7 +68,8 @@ package-lock.json
 # dotenv environment variables file
 .env
 
-public/build
+# build
+dist
 
 # Phpstorm
 .idea

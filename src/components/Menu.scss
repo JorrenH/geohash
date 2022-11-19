@@ -1,0 +1,52 @@
+
+button.copy {
+    color: var(--bs-gray-600);
+}
+
+button.copy:hover, button.copy:active {
+    background-color: var(--bs-gray-300);
+}
+
+input[readonly] {
+    background-color: var(--bs-white);
+}
+
+.menu {
+    z-index: 1000;
+    padding: 0;
+    width: 20vw;
+    min-width: 300px;
+}
+
+.bounds {
+    height: 140px;
+    border: 1px solid var(--bs-gray-400);
+}
+
+.bounds .btn-check:not(:checked) + label {
+    background-color: var(--bs-white);
+
+    &:hover, &:active, &:focus {
+        background-color: var(--bs-gray-200);
+    }
+}
+
+.bounds *:hover, .bounds *:active, .bounds *:focus {
+    background: var(--bs-primary);
+}
+
+input.output {
+    background: white !important;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input.output::-webkit-outer-spin-button,
+input.output::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input.output[type=number] {
+    -moz-appearance: textfield;
+}
