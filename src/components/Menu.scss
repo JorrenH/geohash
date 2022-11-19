@@ -1,13 +1,14 @@
+
 button.copy {
-    color: #666;
+    color: var(--bs-gray-600);
 }
 
 button.copy:hover, button.copy:active {
-    background: #d5d7da;
+    background-color: var(--bs-gray-300);
 }
 
 input[readonly] {
-    background: white;
+    background-color: var(--bs-white);
 }
 
 .menu {
@@ -19,11 +20,15 @@ input[readonly] {
 
 .bounds {
     height: 140px;
-    border: 1px solid rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--bs-gray-400);
 }
 
-.bounds * {
-    background: white;
+.bounds .btn-check:not(:checked) + label {
+    background-color: var(--bs-white);
+
+    &:hover, &:active, &:focus {
+        background-color: var(--bs-gray-200);
+    }
 }
 
 .bounds *:hover, .bounds *:active, .bounds *:focus {

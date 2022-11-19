@@ -1,5 +1,5 @@
 
-import { createEffect, createMemo, onMount } from 'solid-js';
+import { createEffect, createMemo, createSignal, onMount } from 'solid-js';
 import { map as leaflet, control, marker, divIcon, svgOverlay, tileLayer, LatLngBounds } from 'leaflet';
 import type { Map as Leaflet, Marker, SVGOverlay } from 'leaflet';
 
@@ -19,6 +19,7 @@ export default function InteractiveMap() {
         focusPoint: Marker;
     let geoBoxes: Record<string, SVGOverlay> = {};
     
+    let [boxWidth, setBoxWidth] = createSignal(0);
     let geohashes = createMemo(() => {
         return getProximity(state.geohash, [0, 0]);
     });
@@ -43,7 +44,7 @@ export default function InteractiveMap() {
                     stroke="#0d6efd" stroke-opacity={0.8 * opacity} stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
                     fill="#0d6efd" fill-opacity={0.2 * opacity}></rect>
                 <text fill={pos === '0,0' ? '#343a40' : '#6c757d'} x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" 
-                    font-size={(7 / state.geohash.length) + 'vw'} font-weight="bold" opacity={opacity}>{geohashes()[pos].toUpperCase()}</text>
+                    font-size={(boxWidth() / state.geohash.length) + 'px'} font-weight="bold" opacity={opacity}>{geohashes()[pos].toUpperCase()}</text>
             </svg> as SVGElement, [[0, 0], [0, 0]]).addTo(map);
         }
 
@@ -61,6 +62,7 @@ export default function InteractiveMap() {
 
         map.on('zoomend', e => {
             if (state.zoom) setState('precision', Math.round(e.target.getZoom() / 2.5));
+            setBoxWidth(geoBoxes['0,0'].getElement()?.getBoundingClientRect().width || 0);
         });
 
         createEffect(() => {
