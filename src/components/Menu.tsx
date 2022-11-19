@@ -3,24 +3,42 @@ import { state, setState, Corner } from "../store/state";
 import { Collapse, Tooltip } from 'bootstrap';
 import Geohash from "../geohash";
 
-import './Menu.css';
+import './Menu.scss';
 
 export default function Menu() {
     let zoomDOM: HTMLLabelElement | undefined,
-        collapseDOM: HTMLDivElement | undefined;
+        collapseDOM: HTMLDivElement | undefined,
+        copyDOM: HTMLButtonElement | undefined;
 
     let [collapsed, toggleCollapsed] = createSignal(window.innerWidth < 600);
-
-    // let collapse: Collapse | undefined;
+    let showClipboardTooltip: () => void;
 
     onMount(() => {
+        // zoom tooltip
         new Tooltip(zoomDOM!, {
             title: 'Adjust precision according to map zoom',
             placement: 'right',
         });
 
+        // clipboard tooltip
+        let clipboardTooltip = new Tooltip(copyDOM!, {
+            title: 'Copied to clipboard!',
+            placement: 'top',
+            trigger: 'manual',
+        });
+        let clipboardTooltipTimeout: any;
+        showClipboardTooltip = () => {
+            if (clipboardTooltipTimeout) clearTimeout(clipboardTooltipTimeout);
+            else clipboardTooltip.show();
+
+            clipboardTooltipTimeout = setTimeout(() => {
+                clipboardTooltip.hide();
+                clipboardTooltipTimeout = undefined;
+            }, 1000);
+        };
+
+        // collapse
         let collapse = new Collapse(collapseDOM!, { toggle: collapsed() });
-        
         createEffect(() => {
             if (collapsed()) collapse.hide(); else collapse.show();
         });
@@ -40,8 +58,9 @@ export default function Menu() {
         setState('corner', e.currentTarget.value as Corner);
     }
 
-    function copyToClipboard(e: MouseEvent) {
-
+    function copyToClipboard() {
+        navigator.clipboard.writeText(state.cornerLatitude + ", " + state.cornerLongitude);
+        showClipboardTooltip();
     }
 
     return (
@@ -72,7 +91,7 @@ export default function Menu() {
                         value={state.geohash} onInput={persistGeohash}/>
                 </div>
                 <hr/>
-                <button onClick={e => toggleCollapsed(!collapsed())} class="btn position-absolute end-0 me-3 icon material-symbols-outlined"> {collapsed() ? 'expand_more' : 'expand_less'} </button>
+                <button onClick={() => toggleCollapsed(!collapsed())} class="btn position-absolute end-0 me-3 material-icons"> {collapsed() ? 'expand_more' : 'expand_less'} </button>
                 <h5 class="card-title">Output</h5>
                 <div class="collapse" ref={collapseDOM}>
                     <div class="bounds position-relative m-5">
@@ -96,7 +115,7 @@ export default function Menu() {
                         <input value={state.cornerLatitude} type="number" class="form-control output" step="0.00001" placeholder="Latitude" lang="en-150" aria-label="latitude" readonly />
                         <span class="input-group-text">lon</span>
                         <input value={state.cornerLongitude} type="number" class="form-control output" step="0.00001" placeholder="Longitude" lang="en-150" aria-label="longitude" readonly />
-                        <button onClick={copyToClipboard} class="copy input-group-text material-symbols-outlined" data-bs-toggle="tooltip" data-bs-placement="top" title="Copied to clipboard!">assignment</button>
+                        <button ref={copyDOM} onClick={copyToClipboard} class="copy input-group-text material-icons" data-bs-toggle="tooltip" data-bs-placement="top" title="Copied to clipboard!">assignment</button>
                     </div>
                 </div>
                 <p class="text-sm-center mb-0"> © {new Date().getFullYear()} — Jorren Hendriks </p>
