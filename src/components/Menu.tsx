@@ -38,7 +38,7 @@ export default function Menu() {
         };
 
         // collapse
-        let collapse = new Collapse(collapseDOM!, { toggle: collapsed() });
+        let collapse = new Collapse(collapseDOM!, { toggle: !collapsed() });
         createEffect(() => {
             if (collapsed()) collapse.hide(); else collapse.show();
         });
