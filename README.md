@@ -2,6 +2,9 @@
 
 This project is intended as a simple way to find and visualize geohash bounds in a latitude,longitude context.
 
+## Live version
+The application is available on [geohash.jorren.nl](https://geohash.jorren.nl) for you to try out!
+
 ## Developing the app
 Using the power of webpack we can develop the application with live reloads. Using the following command starts 
 a server on your machine which listens for changes made in the sourcecode.

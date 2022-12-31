@@ -3,6 +3,7 @@ import { state, setState, Corner } from "../store/state";
 import { Collapse, Tooltip } from 'bootstrap';
 import Geohash from "../geohash";
 
+import github_mark from '../assets/github-mark.svg';
 import './Menu.scss';
 
 export default function Menu() {
@@ -118,7 +119,13 @@ export default function Menu() {
                         <button ref={copyDOM} onClick={copyToClipboard} class="copy input-group-text material-icons" data-bs-toggle="tooltip" data-bs-placement="top" title="Copied to clipboard!">assignment</button>
                     </div>
                 </div>
-                <p class="text-sm-center mb-0"> © {new Date().getFullYear()} — Jorren Hendriks </p>
+                <p class="text-sm-center mb-0"> 
+                    © {new Date().getFullYear()} — Jorren Hendriks 
+                    <a class="ms-3" title="Github - Source code" href="https://github.com/JorrenH/geohash">
+                        <img alt="github logo" src={github_mark} width={30} height={30}/>
+                    </a>
+                </p>
+                
             </menu>
         </div>
     );
