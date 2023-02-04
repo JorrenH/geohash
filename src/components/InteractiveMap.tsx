@@ -61,7 +61,7 @@ export default function InteractiveMap() {
         });
 
         map.on('zoomend', e => {
-            if (state.zoom) setState('precision', Math.round(e.target.getZoom() / 2.5));
+            if (state.zoom) setState.precision(Math.round(e.target.getZoom() / 2.5));
             setBoxWidth(geoBoxes['0,0'].getElement()?.getBoundingClientRect().width || 0);
         });
 
