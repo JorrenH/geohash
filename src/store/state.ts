@@ -26,15 +26,15 @@ function getCorner(geohash: string, corner: Corner, type: 'lat' | 'lng') : numbe
     let { sw, ne } = Geohash.bounds(geohash);
     switch (corner) {
         case 'center':
-            return type === 'lat' ? state.lat : state.lng;
+            return type === 'lat' ? (sw.lat + ne.lat) / 2 : (sw.lng + ne.lng) / 2;
         case 'northwest':
-            return type === 'lat' ? sw.lat : ne.lng;
+            return type === 'lat' ? ne.lat : sw.lng;
         case 'northeast':
             return type === 'lat' ? ne.lat : ne.lng;
         case 'southwest':
             return type === 'lat' ? sw.lat : sw.lng;
         case 'southeast':
-            return type === 'lat' ? ne.lat : sw.lng; 
+            return type === 'lat' ? sw.lat : ne.lng; 
     }
 }
 
