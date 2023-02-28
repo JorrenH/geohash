@@ -1,5 +1,6 @@
 import { createEffect, createSignal, onMount } from "solid-js";
 import { state, setState, Corner } from "../store/state";
+import { setSearchParam } from "../search-params";
 import { Collapse, Tooltip } from 'bootstrap';
 import Geohash from "../geohash";
 
@@ -44,7 +45,15 @@ export default function Menu() {
             if (collapsed()) collapse.hide(); else collapse.show();
         });
 
-    })
+    });
+
+    createEffect(() => {
+        setState.geohash(Geohash.encode(state.lat, state.lng, state.precision));
+    });
+    
+    createEffect(() => {
+        setSearchParam('geohash', state.geohash);
+    });
     
     function persistGeohash(e: Event & { currentTarget: HTMLInputElement }) {
         let geohash = e.currentTarget.value;

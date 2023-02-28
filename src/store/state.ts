@@ -1,16 +1,20 @@
-import { createEffect } from "solid-js";
 import { createFluentStore } from "solid-fluent-store";
-
+import { searchParams } from '../search-params';
 import Geohash from "../geohash";
 
 export type Corner = 'center' | 'northwest' | 'northeast' | 'southwest' | 'southeast';
 
+const initialState = (geohash => Geohash.valid(geohash)
+    ? { ...Geohash.decode(geohash), precision: geohash.length, geohash }
+    : { lat: 52.0906548, lng: 5.1213056, precision: 5, geohash: 'u178k' }
+)(searchParams().geohash);
+
 const [ state, setState ] = createFluentStore({
-    lat: 52.0906548,
-    lng: 5.1213056,
-    precision: 5,
+    lat: initialState.lat,
+    lng: initialState.lng, 
+    precision: initialState.precision, 
+    geohash: initialState.geohash,
     zoom: true,
-    geohash: '',
     corner: 'center' as Corner,
     get latitude() { return truncate(this.lat) },
     get longitude() { return truncate(this.lng) },
@@ -37,9 +41,5 @@ function getCorner(geohash: string, corner: Corner, type: 'lat' | 'lng') : numbe
             return type === 'lat' ? sw.lat : ne.lng; 
     }
 }
-
-createEffect(() => {
-    setState.geohash(Geohash.encode(state.lat, state.lng, state.precision));
-});
 
 export { state, setState };
