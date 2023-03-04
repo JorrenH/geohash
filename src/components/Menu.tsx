@@ -1,7 +1,7 @@
 import { createEffect, createSignal, onMount } from "solid-js";
 import { state, setState, Corner } from "../store/state";
-import { setSearchParam } from "../search-params";
 import { Collapse, Tooltip } from 'bootstrap';
+import { usePageHash } from "../page-hash";
 import Geohash from "../geohash";
 
 import github_mark from '../assets/github-mark.svg';
@@ -12,6 +12,7 @@ export default function Menu() {
         collapseDOM: HTMLDivElement | undefined,
         copyDOM: HTMLButtonElement | undefined;
 
+    const [pageHash, setPageHash] = usePageHash();
     let [collapsed, toggleCollapsed] = createSignal(window.innerWidth < 600);
     let showClipboardTooltip: () => void;
 
@@ -50,13 +51,17 @@ export default function Menu() {
     createEffect(() => {
         setState.geohash(Geohash.encode(state.lat, state.lng, state.precision));
     });
-    
+
     createEffect(() => {
-        setSearchParam('geohash', state.geohash);
+        persistGeohash(pageHash());
     });
     
-    function persistGeohash(e: Event & { currentTarget: HTMLInputElement }) {
-        let geohash = e.currentTarget.value;
+    createEffect(() => {
+        setPageHash(state.geohash);
+    });
+    
+    function persistGeohash(geohash: string) {
+        geohash = geohash.toLocaleLowerCase();
         if (Geohash.valid(geohash)) {
             setState({ geohash, ...Geohash.decode(geohash), precision: geohash.length });
         } else {
@@ -98,7 +103,7 @@ export default function Menu() {
                 <div class="input-group mb-3">
                     <span class="input-group-text">geohash</span>
                     <input class="form-control" type="text" placeholder="Geohash" aria-label="geohash"
-                        value={state.geohash} onInput={persistGeohash}/>
+                        value={state.geohash} onInput={e => persistGeohash(e.currentTarget.value)}/>
                 </div>
                 <hr/>
                 <button onClick={() => toggleCollapsed(!collapsed())} class="btn position-absolute end-0 me-3 material-icons"> {collapsed() ? 'expand_more' : 'expand_less'} </button>

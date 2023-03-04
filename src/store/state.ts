@@ -1,13 +1,12 @@
 import { createFluentStore } from "solid-fluent-store";
-import { searchParams } from '../search-params';
 import Geohash from "../geohash";
 
 export type Corner = 'center' | 'northwest' | 'northeast' | 'southwest' | 'southeast';
 
-const initialState = (geohash => Geohash.valid(geohash)
+const geohash = window.location.hash.replaceAll('#', '').toLowerCase();
+const initialState = Geohash.valid(geohash)
     ? { ...Geohash.decode(geohash), precision: geohash.length, geohash }
-    : { lat: 52.0906548, lng: 5.1213056, precision: 5, geohash: 'u178k' }
-)(searchParams().geohash);
+    : { lat: 52.0906548, lng: 5.1213056, precision: 5, geohash: 'u178k' };
 
 const [ state, setState ] = createFluentStore({
     lat: initialState.lat,
